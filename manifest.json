@@ -1,0 +1,11 @@
+{
+  "name": "Visa Appointment Slot Checker",
+  "description": "",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "permissions": ["scripting", "tabs", "activeTab"],
+  "host_permissions": ["https://visa.vfsglobal.com/*"]
+}
