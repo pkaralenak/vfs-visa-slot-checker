@@ -1,4 +1,4 @@
-const waitForElement = selector => {
+const waitForElement = (selector) => {
   return new Promise((resolve, reject) => {
     const element = document.querySelector(selector);
 
@@ -7,8 +7,8 @@ const waitForElement = selector => {
       return;
     }
 
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
         const nodes = Array.from(mutation.addedNodes);
         for (let node of nodes) {
           if (node.matches && node.matches(selector)) {
@@ -16,7 +16,7 @@ const waitForElement = selector => {
             resolve(node);
             return;
           }
-        };
+        }
       });
     });
 
@@ -26,21 +26,22 @@ const waitForElement = selector => {
 
 const waitForLoading = () => {
   return new Promise((resolve, reject) => {
-
-    const observer = new MutationObserver(mutations => {
-      mutations.forEach(mutation => {
-        if (mutation.type === 'attributes' 
-          && mutation.attributeName === 'class' 
-          && mutation.oldValue === 'ngx-overlay foreground-closing') {
-            resolve();
-            return;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === 'attributes' &&
+          mutation.attributeName === 'class' &&
+          mutation.oldValue === 'ngx-overlay foreground-closing'
+        ) {
+          resolve();
+          return;
         }
       });
     });
 
-    observer.observe(
-      document.querySelector('.ngx-overlay'), 
-      { attributes: true, attributeOldValue: true }
-    );
+    observer.observe(document.querySelector('.ngx-overlay'), {
+      attributes: true,
+      attributeOldValue: true,
+    });
   });
 };
