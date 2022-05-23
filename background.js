@@ -35,26 +35,30 @@ chrome.tabs.query({ index: 0 }, (tabs) => {
   });
 }); */
 
-chrome.windows.create(
-  {
-    incognito: true,
-  },
-  (window) => {
-    createTab('https://visa.vfsglobal.com/tur/en/pol/login', window.id).then(
-      (tab) => {
-        chrome.scripting.executeScript({
-          target: {
-            tabId: tab.id,
-          },
-          files: ['config.js', 'helpers.js', 'slot-checker.js'],
-        });
+const checkSlotInNewTab = (windowId) => {
+  createTab('https://visa.vfsglobal.com/tur/en/pol/login', windowId).then(
+    (tab) => {
+      chrome.scripting.executeScript({
+        target: {
+          tabId: tab.id,
+        },
+        files: ['config.js', 'helpers.js', 'slot-checker.js'],
+      });
 
-        chrome.runtime.onMessage.addListener((request) => {
-          if (request.isSlotAvailable) {
-            chrome.tabs.update(tab.id, { highlighted: true, active: true });
-          }
-        });
-      }
-    );
-  }
+      chrome.runtime.onMessage.addListener((request) => {
+        if (request.isSlotAvailable) {
+          chrome.tabs.update(tab.id, { highlighted: true, active: true });
+        } else {
+          setTimeout(() => {
+            chrome.tabs.remove(tab.id);
+            checkSlotInNewTab(windowId);
+          }, 60000);
+        }
+      });
+    }
+  );
+};
+
+chrome.windows.create({ incognito: true }, (window) =>
+  checkSlotInNewTab(window.id)
 );

@@ -7,6 +7,20 @@ const selectFieldOption = async (field, optionIndex) => {
   await waitForLoading();
 };
 
+const checkSlots = (app) => {
+  const continueButton = app.querySelector(
+    '[mat-raised-button]:not([disabled])'
+  );
+  if (continueButton) {
+    continueButton.click();
+    waitForLoading().then(() =>
+      chrome.runtime.sendMessage({ isSlotAvailable: true })
+    );
+  } else {
+    chrome.runtime.sendMessage({ isSlotAvailable: false });
+  }
+};
+
 const fillAppointmentDetails = async (app) => {
   await waitForLoading();
   const formFields = app.querySelectorAll('mat-select');
@@ -16,6 +30,7 @@ const fillAppointmentDetails = async (app) => {
   await selectFieldOption(formFields[1], appointmentDetails.category);
   // selecting sub-category
   await selectFieldOption(formFields[2], appointmentDetails.subCategory);
+  checkSlots(app);
 };
 
 const fillLoginForm = async (app) => {
@@ -37,18 +52,17 @@ const startNewBooking = async (app) => {
 };
 
 const pullNewSlots = async (formFields) => {
-  console.log('pulling new slots');
   const tempOption = appointmentDetails.subCategory === 0 ? 1 : 0;
   // re-selecting sub-category for pulling new slots
   await selectFieldOption(formFields[2], tempOption);
   await selectFieldOption(formFields[2], appointmentDetails.subCategory);
 };
 
-const setUpPeriodicSlotsPulling = async (app) => {
+/* const setUpPeriodicSlotsPulling = async (app) => {
   // await waitForLoading();
-  const formFields = app.querySelectorAll('mat-select');
+  // const formFields = app.querySelectorAll('mat-select');
   const interval = setInterval(async () => {
-    await pullNewSlots(formFields);
+    // await pullNewSlots(formFields);
     const continueButton = app.querySelector(
       '[mat-raised-button]:not([disabled])'
     );
@@ -58,20 +72,15 @@ const setUpPeriodicSlotsPulling = async (app) => {
       waitForLoading().then(() =>
         chrome.runtime.sendMessage({ isSlotAvailable: true })
       );
+    } else {
+      chrome.tab.reload();
     }
   }, checkPeriodInterval);
-};
+}; */
 
 waitForElement('app-login').then((app) => fillLoginForm(app));
 waitForElement('app-dashboard').then((app) => startNewBooking(app));
 waitForElement('app-eligibility-criteria').then((app) => {
   fillAppointmentDetails(app);
-  setUpPeriodicSlotsPulling(app);
+  // setUpPeriodicSlotsPulling(app);
 });
-/* waitForElement('[mat-raised-button]:not([disabled])').then((continueButton) => {
-  clearInterval(interval);
-  continueButton.click();
-  waitForLoading().then(() =>
-    chrome.runtime.sendMessage({ isSlotAvailable: true })
-  );
-}); */
