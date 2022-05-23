@@ -7,5 +7,6 @@
     "service_worker": "background.js"
   },
   "permissions": ["scripting", "tabs", "activeTab"],
-  "host_permissions": ["https://visa.vfsglobal.com/*"]
+  "host_permissions": ["https://visa.vfsglobal.com/*"],
+  "incognito": "spanning"
 }

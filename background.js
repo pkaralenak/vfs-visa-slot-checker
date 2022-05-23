@@ -1,6 +1,6 @@
-const createTab = (url) => {
+const createTab = (url, windowId) => {
   return new Promise((resolve) => {
-    chrome.tabs.create({ url, active: true, index: 0 }, async (tab) => {
+    chrome.tabs.create({ url, windowId }, async (tab) => {
       chrome.tabs.onUpdated.addListener(
         (listener = (tabId, info) => {
           if (info.status === 'complete' && tabId === tab.id) {
@@ -13,53 +13,48 @@ const createTab = (url) => {
   });
 };
 
-const activateTab = (index) => {
+/* const activateTab = (index) => {
   chrome.tabs.query({ index }, (tabs) => {
     chrome.tabs.update(tabs[0].id, { highlighted: true });
   });
 };
-
-const getAppTab = () => {
-  return chrome.tabs.query({ index: 0 }, (tabs) => {
-    return tabs[0].id;
-  });
-};
-
-/* const appTab = getAppTab();
-
 activateTab(0);
+
 chrome.tabs.query({ index: 0 }, (tabs) => {
   chrome.scripting.executeScript({
     target: {
       tabId: tabs[0].id,
     },
-    files: ['config.js', 'helpers.js', 'login.js'],
-  });
-}); */
-
-createTab('https://visa.vfsglobal.com/tur/en/pol/login').then((tab) => {
-  chrome.scripting.executeScript({
-    target: {
-      tabId: tab.id,
-    },
     files: ['config.js', 'helpers.js', 'slot-checker.js'],
   });
-});
 
-/* const getAppTab = async () => {
-  return await chrome.tabs.query({ index: 0 }, tabs => {
-    return tabs[0].id;
+  chrome.runtime.onMessage.addListener((request) => {
+    if (request.isSlotAvailable) {
+      chrome.tabs.update(tabs[0].id, { highlighted: true, active: true });
+    }
   });
-};
-
-const appTab = await getAppTab(); */
-
-/* createTab("https://visa.vfsglobal.com/tur/en/pol/dashboard")
-  .then(tab => {
-    chrome.scripting.executeScript({
-      target: {
-        tabId: tab.id
-      },
-      files: ["dashboard.js"]
-    });
 }); */
+
+chrome.windows.create(
+  {
+    incognito: true,
+  },
+  (window) => {
+    createTab('https://visa.vfsglobal.com/tur/en/pol/login', window.id).then(
+      (tab) => {
+        chrome.scripting.executeScript({
+          target: {
+            tabId: tab.id,
+          },
+          files: ['config.js', 'helpers.js', 'slot-checker.js'],
+        });
+
+        chrome.runtime.onMessage.addListener((request) => {
+          if (request.isSlotAvailable) {
+            chrome.tabs.update(tab.id, { highlighted: true, active: true });
+          }
+        });
+      }
+    );
+  }
+);
