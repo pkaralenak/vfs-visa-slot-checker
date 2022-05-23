@@ -1,4 +1,0 @@
-const loginCreds = () => ({
-  email: "example@example.com",
-  password: "Your_Password"
-});

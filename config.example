@@ -1,0 +1,39 @@
+const baseUrl = 'https://visa.vfsglobal.com/tur/en/pol';
+
+const loginCreds = {
+  email: 'example@example.com',
+  password: 'Your_Password',
+};
+
+const appointmentDetails = {
+  centre: 1,
+  category: 0,
+  subCategory: 2,
+};
+
+const applicants = [
+  {
+    firstName: 'John',
+    lastName: 'Smith',
+    gender: 1,
+    dateOfBirth: '11/11/1990',
+    nationality: 'TURKEY',
+    passportNumber: 'AA1234567',
+    passportExpiryDate: '01/01/2030',
+    countryCode: '90',
+    contactNumber: '1234567890',
+    email: 'example@example.com',
+  },
+  {
+    firstName: 'Patricia',
+    lastName: 'Smith',
+    gender: 0,
+    dateOfBirth: '10/10/1995',
+    nationality: 'TURKEY',
+    passportNumber: 'BB1234567',
+    passportExpiryDate: '02/02/2025',
+    countryCode: '90',
+    contactNumber: '0987654321',
+    email: 'example@example.com',
+  }
+];

@@ -4,14 +4,8 @@
   "version": "1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "index.js"
+    "service_worker": "background.js"
   },
   "permissions": ["scripting", "tabs", "activeTab"],
-  "host_permissions": ["https://visa.vfsglobal.com/*"],
-  "web_accessible_resources": [
-    {
-      "resources": ["/credentials.json"],
-      "matches": ["https://visa.vfsglobal.com/*"]
-    }
-  ]
+  "host_permissions": ["https://visa.vfsglobal.com/*"]
 }

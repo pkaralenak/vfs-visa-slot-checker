@@ -19,13 +19,13 @@ const activateTab = (index) => {
   });
 };
 
-/* const getAppTab = () => {
+const getAppTab = () => {
   return chrome.tabs.query({ index: 0 }, (tabs) => {
     return tabs[0].id;
   });
 };
 
-const appTab = getAppTab();
+/* const appTab = getAppTab();
 
 activateTab(0);
 chrome.tabs.query({ index: 0 }, (tabs) => {
@@ -33,7 +33,7 @@ chrome.tabs.query({ index: 0 }, (tabs) => {
     target: {
       tabId: tabs[0].id,
     },
-    files: ['helpers.js', 'appointment-details.js'],
+    files: ['config.js', 'helpers.js', 'login.js'],
   });
 }); */
 
@@ -42,26 +42,7 @@ createTab('https://visa.vfsglobal.com/tur/en/pol/login').then((tab) => {
     target: {
       tabId: tab.id,
     },
-    files: ['credentials.js', 'helpers.js', 'login.js'],
-  });
-
-  chrome.runtime.onMessage.addListener((request) => {
-    if (request.isLoggedIn) {
-      chrome.scripting.executeScript({
-        target: {
-          tabId: tab.id,
-        },
-        files: ['dashboard.js'],
-      });
-    }
-    if (request.isBooking) {
-      chrome.scripting.executeScript({
-        target: {
-          tabId: tab.id,
-        },
-        files: ['appointment-details.js'],
-      });
-    }
+    files: ['config.js', 'helpers.js', 'slot-checker.js'],
   });
 });
 
