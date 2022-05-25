@@ -51,36 +51,8 @@ const startNewBooking = async (app) => {
   await waitForLoading();
 };
 
-const pullNewSlots = async (formFields) => {
-  const tempOption = appointmentDetails.subCategory === 0 ? 1 : 0;
-  // re-selecting sub-category for pulling new slots
-  await selectFieldOption(formFields[2], tempOption);
-  await selectFieldOption(formFields[2], appointmentDetails.subCategory);
-};
-
-/* const setUpPeriodicSlotsPulling = async (app) => {
-  // await waitForLoading();
-  // const formFields = app.querySelectorAll('mat-select');
-  const interval = setInterval(async () => {
-    // await pullNewSlots(formFields);
-    const continueButton = app.querySelector(
-      '[mat-raised-button]:not([disabled])'
-    );
-    if (continueButton) {
-      clearInterval(interval);
-      continueButton.click();
-      waitForLoading().then(() =>
-        chrome.runtime.sendMessage({ isSlotAvailable: true })
-      );
-    } else {
-      chrome.tab.reload();
-    }
-  }, checkPeriodInterval);
-}; */
-
 waitForElement('app-login').then((app) => fillLoginForm(app));
 waitForElement('app-dashboard').then((app) => startNewBooking(app));
 waitForElement('app-eligibility-criteria').then((app) => {
   fillAppointmentDetails(app);
-  // setUpPeriodicSlotsPulling(app);
 });
