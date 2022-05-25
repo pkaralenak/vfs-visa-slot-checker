@@ -88,7 +88,9 @@ chrome.windows.create({ incognito: true }, (window) => {
   checkSlotInNewTab(window.id);
   chrome.runtime.onMessage.addListener((request, sender) => {
     if (request.isSlotAvailable) {
-      chrome.tabs.update(sender.tab.id, { highlighted: true, active: true });
+      chrome.windows.update(window.id, { focused: true }, () => {
+        chrome.tabs.update(sender.tab.id, { highlighted: true, active: true });
+      });
     } else {
       setTimeout(() => {
         chrome.tabs.remove(sender.tab.id);
